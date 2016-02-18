@@ -1,0 +1,1105 @@
+sim-outorder: SimpleScalar/Alpha Tool Set version 3.0 of August, 2003.
+Copyright (c) 1994-2003 by Todd M. Austin, Ph.D. and SimpleScalar, LLC.
+All Rights Reserved. This version of SimpleScalar is licensed for academic
+non-commercial use.  No portion of this work may be used by any commercial
+entity, or for any commercial purpose, without the prior written permission
+of SimpleScalar, LLC (info@simplescalar.com).
+
+warning: section `.comment' ignored...
+sim: command line: /home/jai/Desktop/simplescalar/simplesim-RMNM-Flex/sim-outorder -cache:il1 il1:128:32:8:t:1:8192:131072:1 -cache:dl1 dl1:128:32:1:l -cache:dl2 dl2:512:64:2:l -cache:dl3 dl3:1024:64:4:l -max:inst 50000000 -fastfwd 20000000 -redir:sim cache_RMNM-Flex_3.txt ../../spec2000binaries/equake00.peak.ev6 
+
+sim: simulation started @ Sun Dec  6 09:30:37 2015, options follow:
+
+sim-outorder: This simulator implements a very detailed out-of-order issue
+superscalar processor with a two-level memory system and speculative
+execution support.  This simulator is a performance simulator, tracking the
+latency of all pipeline operations.
+
+# -config                     # load configuration from a file
+# -dumpconfig                 # dump configuration to a file
+# -h                    false # print help message    
+# -v                    false # verbose operation     
+# -d                    false # enable debug message  
+# -i                    false # start in Dlite debugger
+-seed                       1 # random number generator seed (0 for timer seed)
+# -q                    false # initialize and terminate immediately
+# -chkpt               <null> # restore EIO trace execution from <fname>
+# -redir:sim     cache_RMNM-Flex_3.txt # redirect simulator output to file (non-interactive only)
+# -redir:prog          <null> # redirect simulated program output to file
+-nice                       0 # simulator scheduling priority
+-max:inst            50000000 # maximum number of inst's to execute
+-fastfwd             20000000 # number of insts skipped before timing starts
+# -ptrace              <null> # generate pipetrace, i.e., <fname|stdout|stderr> <range>
+-fetch:ifqsize              4 # instruction fetch queue size (in insts)
+-fetch:mplat                3 # extra branch mis-prediction latency
+-fetch:speed                1 # speed of front-end of machine relative to execution core
+-bpred                  bimod # branch predictor type {nottaken|taken|perfect|bimod|2lev|comb}
+-bpred:bimod     2048 # bimodal predictor config (<table size>)
+-bpred:2lev      1 1024 8 0 # 2-level predictor config (<l1size> <l2size> <hist_size> <xor>)
+-bpred:comb      1024 # combining predictor config (<meta_table_size>)
+-bpred:ras                  8 # return address stack size (0 for no return stack)
+-bpred:btb       512 4 # BTB config (<num_sets> <associativity>)
+# -bpred:spec_update       <null> # speculative predictors update in {ID|WB} (default non-spec)
+-decode:width               4 # instruction decode B/W (insts/cycle)
+-issue:width                4 # instruction issue B/W (insts/cycle)
+-issue:inorder          false # run pipeline with in-order issue
+-issue:wrongpath         true # issue instructions down wrong execution paths
+-commit:width               4 # instruction commit B/W (insts/cycle)
+-ruu:size                  16 # register update unit (RUU) size
+-lsq:size                   8 # load/store queue (LSQ) size
+-cache:dl1       dl1:128:32:1:l # l1 data cache config, i.e., {<config>|none}
+-cache:dl1lat               1 # l1 data cache hit latency (in cycles)
+-cache:dl2       dl2:512:64:2:l # l2 data cache config, i.e., {<config>|none}
+-cache:dl2lat               6 # l2 data cache hit latency (in cycles)
+-cache:dl3       dl3:1024:64:4:l # l3 data cache config, i.e., {<config>|none}
+-cache:dl3lat              10 # l3 data cache hit latency (in cycles)
+-cache:il1       il1:128:32:8:t:1:8192:131072:1 # l1 inst cache config, i.e., {<config>|dl1|dl2|none}
+-cache:il1lat               1 # l1 instruction cache hit latency (in cycles)
+-cache:il2                dl2 # l2 instruction cache config, i.e., {<con../../spec2000binaries/equake00.peak.ev6: Reading nodes.
+fig>|dl2|none}
+-cache:il2lat               6 # l2 instruction cache hit latency (in cycles)
+-cache:il3                dl3 # l3 instruction cache config, i.e., {<config>|dl3|none}
+-cache:il3lat              10 # l3 instruction cache hit latency (in cycles)
+-cache:flush            false # flush caches on system calls
+-cache:icompress        false # convert 64-bit inst addresses to 32-bit inst equivalents
+-mem:lat         18 2 # memory access latency (<first_chunk> <inter_chunk>)
+-mem:width                  8 # memory access bus width (in bytes)
+-tlb:itlb        itlb:16:4096:4:l # instruction TLB config, i.e., {<config>|none}
+-tlb:dtlb        dtlb:32:4096:4:l # data TLB config, i.e., {<config>|none}
+-tlb:lat                   30 # inst/data TLB miss latency (in cycles)
+-res:ialu                   4 # total number of integer ALU's available
+-res:imult                  1 # total number of integer multiplier/dividers available
+-res:memport                2 # total number of memory system ports available (to CPU)
+-res:fpalu                  4 # total number of floating point ALU's available
+-res:fpmult                 1 # total number of floating point multiplier/dividers available
+# -pcstat              <null> # profile stat(s) against text addr's (mult uses ok)
+-bugcompat              false # operate in backward-compatible bugs mode (for testing only)
+
+  Pipetrace range arguments are formatted as follows:
+
+    {{@|#}<start>}:{{@|#|+}<end>}
+
+  Both ends of the range are optional, if neither are specified, the entire
+  execution is traced.  Ranges that start with a `@' designate an address
+  range to be traced, those that start with an `#' designate a cycle count
+  range.  All other range values represent an instruction count range.  The
+  second argument, if specified with a `+', indicates a value relative
+  to the first argument, e.g., 1000:+100 == 1000:1100.  Program symbols may
+  be used in all contexts.
+
+    Examples:   -ptrace FOO.trc #0:#1000
+                -ptrace BAR.trc @2000:
+                -ptrace BLAH.trc :1500
+                -ptrace UXXE.trc :
+                -ptrace FOOBAR.trc @main:+278
+
+  Branch predictor configuration examples for 2-level predictor:
+    Configurations:   N, M, W, X
+      N   # entries in first level (# of shift register(s))
+      W   width of shift register(s)
+      M   # entries in 2nd level (# of counters, or other FSM)
+      X   (yes-1/no-0) xor history and address for 2nd level index
+    Sample predictors:
+      GAg     : 1, W, 2^W, 0
+      GAp     : 1, W, M (M > 2^W), 0
+      PAg     : N, W, 2^W, 0
+      PAp     : N, W, M (M == 2^(N+W)), 0
+      gshare  : 1, W, 2^W, 1
+  Predictor `comb' combines a bimodal and a 2-level predictor.
+
+  The cache config parameter <config> has the following format:
+
+    <name>:<nsets>:<bsize>:<assoc>:<repl>
+
+    <name>   - name of the cache being defined
+    <nsets>  - number of sets in the cache
+    <bsize>  - block size of the cache
+    <assoc>  - associativity of the cache
+    <repl>   - block replacement strategy, 'l'-LRU, 'f'-FIFO, 'r'-random
+
+    Examples:   -cache:dl1 dl1:4096:32:1:l
+                -dtlb dtlb:128:4096:32:r
+
+  Cache levels can be unified by pointing a level of the instruction cache
+  hierarchy at the data cache hiearchy using the "dl1" and "dl2" cache
+  configuration arguments.  Most sensible combinations are supported, e.g.,
+
+    A unified l2 cache (il2 is pointed at dl2):
+      -cache:il1 il1:128:64:1:l -cache:il2 dl2
+      -cache:dl1 dl1:256:32:1:l -cache:dl2 ul2:1024:64:2:l
+
+    Or, a fully unified cache hierarchy (il1 pointed at dl1):
+      -cache:il1 dl1
+      -cache:dl1 ul1:256:32:1:l -cache:dl2 ul2:1024:64:2:l
+
+
+
+sim: ** fast forwarding 20000000 insts **
+sim: ** starting performance simulation **
+smaller tournament 1, insn 119988, accesses_since_last 131073, miss_sat 0, miss_rat 0.002419
+smaller tournament 1 outcome, insn 127490, accesses 8193, hits 0,    config 7 -way
+smaller tournament 2, insn 247897, accesses_since_last 131073, miss_sat 0, miss_rat 0.001176
+smaller tournament 2 outcome, insn 255413, accesses 8193, hits 1,    config 6 -way
+smaller tournament 3, insn 375555, accesses_since_last 131073, miss_sat 0, miss_rat 0.000837
+smaller tournament 3 outcome, insn 377410, accesses 2022, hits 2,    config 6 -way
+smaller tournament 4, insn 497681, accesses_since_last 131073, miss_sat 0, miss_rat 0.000678
+smaller tournament 4 outcome, insn 498007, accesses 343, hits 2,    config 6 -way
+smaller tournament 5, insn 618568, accesses_since_last 131073, miss_sat 0, miss_rat 0.000580
+smaller tournament 5 outcome, insn 618791, accesses 242, hits 2,    config 6 -way
+smaller tournament 6, insn 739266, accesses_since_last 131073, miss_sat 0, miss_rat 0.000515
+smaller tournament 6 outcome, insn 739741, accesses 576, hits 2,    config 6 -way
+smaller tournament 7, insn 860269, accesses_since_last 131073, miss_sat 0, miss_rat 0.000468
+smaller tournament 7 outcome, insn 860696, accesses 506, hits 2,    config 6 -way
+smaller tournament 8, insn 981039, accesses_since_last 131073, miss_sat 0, miss_rat 0.000434
+smaller tournament 8 outcome, insn 981749, accesses 747, hits 2,    config 6 -way
+smaller tournament 9, insn 1102396, accesses_since_last 131073, miss_sat 0, miss_rat 0.000406
+smaller tournament 9 outcome, insn 1103540, accesses 1185, hits 2,    config 6 -way
+smaller tournament 10, insn 1224179, accesses_since_last 131073, miss_sat 0, miss_rat 0.000383
+smaller tournament 10 outcome, insn 1224525, accesses 415, hits 2,    config 6 -way
+smaller tournament 11, insn 1345205, accesses_since_last 131073, miss_sat 0, miss_rat 0.000365
+smaller tournament 11 outcome, insn 1345805, accesses 743, hits 2,    config 6 -way
+smaller tournament 12, insn 1466446, accesses_since_last 131073, miss_sat 0, miss_rat 0.000350
+smaller tournament 12 outcome, insn 1467428, accesses 1152, hits 2,    config 6 -way
+smaller tournament 13, insn 1588035, accesses_since_last 131073, miss_sat 0, miss_rat 0.000337
+smaller tournament 13 outcome, insn 1588690, accesses 806, hits 2,    config 6 -way
+smaller tournament 14, insn 1709271, accesses_since_last 131073, miss_sat 0, miss_rat 0.000337
+smaller tournament 14 outcome, insn 1710435, accesses 1342, hits 2,    config 6 -way
+smaller tournament 15, insn 1831037, accesses_since_last 131073, miss_sat 0, miss_rat 0.000327
+smaller tournament 15 outcome, insn 1831723, accesses 852, hits 2,    config 6 -way
+smaller tournament 16, insn 1952386, accesses_since_last 131073, miss_sat 0, miss_rat 0.000318
+smaller tournament 16 outcome, insn 1953359, accesses 1158, hits 2,    config 6 -way
+smaller tournament 17, insn 2073687, accesses_since_last 131073, miss_sat 0, miss_rat 0.000310
+smaller tournament 17 outcome, insn 2076570, accesses 3138, hits 2,    config 6 -way
+smaller tournament 18, insn 2196899, accesses_since_last 131073, miss_sat 0, miss_rat 0.000303
+smaller tournament 18 outcome, insn 2199054, accesses 2347, hits 2,    config 6 -way
+smaller tournament 19, insn 2319611, accesses_since_last 131073, miss_sat 0, miss_rat 0.000297
+smaller tournament 19 outcome, insn 2320222, accesses 699, hits 2,    config 6 -way
+smaller tournament 20, insn 2440780, accesses_since_last 131073, miss_sat 0, miss_rat 0.000291
+smaller tournament 20 outcome, insn 2441520, accesses 848, hits 2,    config 6 -way
+smaller tournament 21, insn 2562262, accesses_since_last 131073, miss_sat 0, miss_rat 0.000286
+smaller tournament 21 outcome, insn 2564226, accesses 2132, hits 2,    config 6 -way
+smaller tournament 22, insn 2684939, accesses_since_last 131073, miss_sat 0, miss_rat 0.000281
+smaller tournament 22 outcome, insn 2685575, accesses 722, hits 2,    config 6 -way
+smaller tournament 23, insn 2806347, accesses_since_last 131073, miss_sat 0, miss_rat 0.000277
+smaller tournament 23 outcome, insn 2807857, accesses 1635, hits 2,    config 6 -way
+smaller tournament 24, insn 2928453, accesses_since_last 131073, miss_sat 0, miss_rat 0.000273
+smaller tournament 24 outcome, insn 2929058, accesses 683, hits 2,    config 6 -way
+smaller tournament 25, insn 3049599, accesses_since_last 131073, miss_sat 0, miss_rat 0.000269
+smaller tournament 25 outcome, insn 3049918, accesses 345, hits 2,    config 6 -way
+smaller tournament 26, insn 3170497, accesses_since_last 131073, miss_sat 0, miss_rat 0.000266
+smaller tournament 26 outcome, insn 3172147, accesses 1861, hits 2,    config 6 -way
+smaller tournament 27, insn 3292864, accesses_since_last 131073, miss_sat 0, miss_rat 0.000263
+smaller tournament 27 outcome, insn 3294285, accesses 1606, hits 2,    config 6 -way
+smaller tournament 28, insn 3414978, accesses_since_last 131073, miss_sat 0, miss_rat 0.000260
+smaller tournament 28 outcome, insn 3415892, accesses 1074, hits 2,    config 6 -way
+smaller tournament 29, insn 3536440, accesses_since_last 131073, miss_sat 0, miss_rat 0.000257
+smaller tournament 29 outcome, insn 3536779, accesses 407, hits 2,    config 6 -way
+smaller tournament 30, insn 3657287, accesses_since_last 131073, miss_sat 0, miss_rat 0.000255
+smaller tournament 30 outcome, insn 3658101, accesses 850, hits 2,    config 6 -way
+smaller tournament 31, insn 3778652, accesses_since_last 131073, miss_sat 0, miss_rat 0.000253
+smaller tournament 31 outcome, insn 3781026, accesses 2556, hits 2,    config 6 -way
+smaller tournament 32, insn 3901706, accesses_since_last 131073, miss_sat 0, miss_rat 0.000250
+smaller tournament 32 outcome, insn 3901946, accesses 239, hits 2,    config 6 -way
+smaller tournament 33, insn 4022408, accesses_since_last 131073, miss_sat 0, miss_rat 0.000249
+smaller tournament 33 outcome, insn 4023480, accesses 1118, hits 2,    config 6 -way
+smaller tournament 34, insn 4144038, accesses_since_last 131073, miss_sat 0, miss_rat 0.000246
+smaller tournament 34 outcome, insn 4144335, accesses 357, hits 2,    config 6 -way
+smaller tournament 35, insn 4264841, accesses_since_last 131073, miss_sat 0, miss_rat 0.000245
+smaller tournament 35 outcome, insn 4265226, accesses 430, hits 2,    config 6 -way
+smaller tournament 36, insn 4385740, accesses_since_last 131073, miss_sat 0, miss_rat 0.000243
+smaller tournament 36 outcome, insn 4386857, accesses 1147, hits 2,    config 6 -way
+smaller tournament 37, insn 4507255, accesses_since_last 131073, miss_sat 0, miss_rat 0.000242
+smaller tournament 37 outcome, insn 4510168, accesses 3140, hits 2,    config 6 -way
+smaller tournament 38, insn 4630917, accesses_since_last 131073, miss_sat 0, miss_rat 0.000240
+smaller tournament 38 outcome, insn 4632510, accesses 1718, hits 2,    config 6 -way
+smaller tournament 39, insn 4753205, accesses_since_last 131073, miss_sat 0, miss_rat 0.000238
+smaller tournament 39 outcome, insn 4753775, accesses 636, hits 2,    config 6 -way
+smaller tournament 40, insn 4874415, accesses_since_last 131073, miss_sat 0, miss_rat 0.000237
+smaller tournament 40 outcome, insn 4875810, accesses 1521, hits 2,    config 6 -way
+smaller tournament 41, insn 4996455, accesses_since_last 131073, miss_sat 0, miss_rat 0.000236
+smaller tournament 41 outcome, insn 4997793, accesses 1481, hits 2,    config 6 -way
+smaller tournament 42, insn 5118408, accesses_since_last 131073, miss_sat 0, miss_rat 0.000234
+smaller tournament 42 outcome, insn 5119101, accesses 775, hits 2,    config 6 -way
+smaller tournament 43, insn 5239779, accesses_since_last 131073, miss_sat 0, miss_rat 0.000233
+smaller tournament 43 outcome, insn 5240725, accesses 1065, hits 2,    config 6 -way
+smaller tournament 44, insn 5361362, accesses_since_last 131073, miss_sat 0, miss_rat 0.000232
+smaller tournament 44 outcome, insn 5362379, accesses 1136, hits 2,    config 6 -way
+smaller tournament 45, insn 5483085, accesses_since_last 131073, miss_sat 0, miss_rat 0.000231
+smaller tournament 45 outcome, insn 5483385, accesses 299, hits 2,    config 6 -way
+smaller tournament 46, insn 5604054, accesses_since_last 131073, miss_sat 0, miss_rat 0.000230
+smaller tournament 46 outcome, insn 5604987, accesses 1039, hits 2,    config 6 -way
+smaller tournament 47, insn 5725552, accesses_since_last 131073, miss_sat 0, miss_rat 0.000229
+smaller tournament 47 outcome, insn 5726821, accesses 1456, hits 2,    config 6 -way
+smaller tournament 48, insn 5847417, accesses_since_last 131073, miss_sat 0, miss_rat 0.000228
+smaller tournament 48 outcome, insn 5847888, accesses 539, hits 2,    config 6 -way
+smaller tournament 49, insn 5968552, accesses_since_last 131073, miss_sat 0, miss_rat 0.000227
+smaller tournament 49 outcome, insn 5968892, accesses 393, hits 2,    config 6 -way
+smaller tournament 50, insn 6089708, accesses_since_last 131073, miss_sat 0, miss_rat 0.000226
+smaller tournament 50 outcome, insn 6091246, accesses 1763, hits 2,    config 6 -way
+smaller tournament 51, insn 6212135, accesses_since_last 131073, miss_sat 0, miss_rat 0.000225
+smaller tournament 51 outcome, insn 6212964, accesses 1004, hits 2,    config 6 -way
+smaller tournament 52, insn 6333630, accesses_since_last 131073, miss_sat 0, miss_rat 0.000224
+smaller tournament 52 outcome, insn 6335133, accesses 1708, hits 2,    config 6 -way
+smaller tournament 53, insn 6455785, accesses_since_last 131073, miss_sat 0, miss_rat 0.000224
+smaller tournament 53 outcome, insn 6456587, accesses 944, hits 2,    config 6 -way
+smaller tournament 54, insn 6577132, accesses_since_last 131073, miss_sat 0, miss_rat 0.000223
+smaller tournament 54 outcome, insn 6577538, accesses 505, hits 2,    config 6 -way
+smaller tournament 55, insn 6698159, accesses_since_last 131073, miss_sat 0, miss_rat 0.000222
+smaller tournament 55 outcome, insn 6698828, accesses 820, hits 2,    config 6 -way
+smaller tournament 56, insn 6819437, accesses_since_last 131073, miss_sat 0, miss_rat 0.000221
+smaller tournament 56 outcome, insn 6819789, accesses 421, hits 2,    config 6 -way
+smaller tournament 57, insn 6940431, accesses_since_last 131073, miss_sat 0, miss_rat 0.000221
+smaller tournament 57 outcome, insn 6941419, accesses 1172, hits 2,    config 6 -way
+smaller tournament 58, insn 7061879, accesses_since_last 131073, miss_sat 0, miss_rat 0.000220
+smaller tournament 58 outcome, insn 7063047, accesses 1216, hits 2,    config 6 -way
+smaller tournament 59, insn 7183664, accesses_since_last 131073, miss_sat 0, miss_rat 0.000219
+smaller tournament 59 outcome, insn 7183788, accesses 154, hits 2,    config 6 -way
+smaller tournament 60, insn 7304468, accesses_since_last 131073, miss_sat 0, miss_rat 0.000219
+smaller tournament 60 outcome, insn 7305663, accesses 1392, hits 2,    config 6 -way
+smaller tournament 61, insn 7426174, accesses_since_last 131073, miss_sat 0, miss_rat 0.000218
+smaller tournament 61 outcome, insn 7426393, accesses 249, hits 2,    config 6 -way
+smaller tournament 62, insn 7546921, accesses_since_last 131073, miss_sat 0, miss_rat 0.000218
+smaller tournament 62 outcome, insn 7548642, accesses 1883, hits 2,    config 6 -way
+smaller tournament 63, insn 7668972, accesses_since_last 131073, miss_sat 0, miss_rat 0.000217
+smaller tournament 63 outcome, insn 7671031, accesses 2227, hits 2,    config 6 -way
+smaller tournament 64, insn 7791607, accesses_since_last 131073, miss_sat 0, miss_rat 0.000217
+smaller tournament 64 outcome, insn 7791812, accesses 207, hits 2,    config 6 -way
+smaller tournament 65, insn 7912323, accesses_since_last 131073, miss_sat 0, miss_rat 0.000216
+smaller tournament 65 outcome, insn 7912761, accesses 457, hits 2,    config 6 -way
+smaller tournament 66, insn 8033471, accesses_since_last 131073, miss_sat 0, miss_rat 0.000216
+smaller tournament 66 outcome, insn 8034328, accesses 973, hits 2,    config 6 -way
+smaller tournament 67, insn 8154992, accesses_since_last 131073, miss_sat 0, miss_rat 0.000215
+smaller tournament 67 outcome, insn 8155656, accesses 769, hits 2,    config 6 -way
+smaller tournament 68, insn 8276367, accesses_since_last 131073, miss_sat 0, miss_rat 0.000215
+smaller tournament 68 outcome, insn 8278011, accesses 1775, hits 2,    config 6 -way
+smaller tournament 69, insn 8398694, accesses_since_last 131073, miss_sat 0, miss_rat 0.000214
+smaller tournament 69 outcome, insn 8400333, accesses 1773, hits 2,    config 6 -way
+smaller tournament 70, insn 8520897, accesses_since_last 131073, miss_sat 0, miss_rat 0.000214
+smaller tournament 70 outcome, insn 8522655, accesses 1901, hits 2,    config 6 -way
+smaller tournament 71, insn 8643350, accesses_since_last 131073, miss_sat 0, miss_rat 0.000213
+smaller tournament 71 outcome, insn 8644330, accesses 1094, hits 2,    config 6 -way
+smaller tournament 72, insn 8764882, accesses_since_last 131073, miss_sat 0, miss_rat 0.000213
+smaller tournament 72 outcome, insn 8765306, accesses 449, hits 2,    config 6 -way
+smaller tournament 73, insn 8885881, accesses_since_last 131073, miss_sat 0, miss_rat 0.000212
+smaller tournament 73 outcome, insn 8887628, accesses 1890, hits 2,    config 6 -way
+smaller tournament 74, insn 9007914, accesses_since_last 131073, miss_sat 0, miss_rat 0.000212
+smaller tournament 74 outcome, insn 9009068, accesses 1351, hits 2,    config 6 -way
+smaller tournament 75, insn 9129361, accesses_since_last 131073, miss_sat 0, miss_rat 0.000212
+smaller tournament 75 outcome, insn 9130033, accesses 689, hits 2,    config 6 -way
+smaller tournament 76, insn 9250565, accesses_since_last 131073, miss_sat 0, miss_rat 0.000211
+smaller tournament 76 outcome, insn 9252122, accesses 1703, hits 2,    config 6 -way
+smaller tournament 77, insn 9372529, accesses_since_last 131073, miss_sat 0, miss_rat 0.000211
+smaller tournament 77 outcome, insn 9374424, accesses 2052, hits 2,    config 6 -way
+smaller tournament 78, insn 9494845, accesses_since_last 131073, miss_sat 0, miss_rat 0.000211
+smaller tournament 78 outcome, insn 9495530, accesses 827, hits 2,    config 6 -way
+smaller tournament 79, insn 9616067, accesses_since_last 131073, miss_sat 0, miss_rat 0.000210
+smaller tournament 79 outcome, insn 9617521, accesses 1607, hits 2,    config 6 -way
+smaller tournament 80, insn 9737979, accesses_since_last 131073, miss_sat 0, miss_rat 0.000210
+smaller tournament 80 outcome, insn 9738954, accesses 1083, hits 2,    config 6 -way
+smaller tournament 81, insn 9859719, accesses_since_last 131073, miss_sat 0, miss_rat 0.000210
+smaller tournament 81 outcome, insn 9860651, accesses 1039, hits 2,    config 6 -way
+smaller tournament 82, insn 9981225, accesses_since_last 131073, miss_sat 0, miss_rat 0.000209
+smaller tournament 82 outcome, insn 9981790, accesses 625, hits 2,    config 6 -way
+smaller tournament 83, insn 10102442, accesses_since_last 131073, miss_sat 0, miss_rat 0.000209
+smaller tournament 83 outcome, insn 10102751, accesses 326, hits 2,    config 6 -way
+smaller tournament 84, insn 10223085, accesses_since_last 131073, miss_sat 0, miss_rat 0.000209
+smaller tournament 84 outcome, insn 10223399, accesses 351, hits 2,    config 6 -way
+smaller tournament 85, insn 10343694, accesses_since_last 131073, miss_sat 0, miss_rat 0.000209
+smaller tournament 85 outcome, insn 10345571, accesses 2048, hits 2,    config 6 -way
+smaller tournament 86, insn 10466032, accesses_since_last 131073, miss_sat 0, miss_rat 0.000208
+smaller tournament 86 outcome, insn 10468190, accesses 2343, hits 2,    config 6 -way
+smaller tournament 87, insn 10588693, accesses_since_last 131073, miss_sat 0, miss_rat 0.000208
+smaller tournament 87 outcome, insn 10588815, accesses 123, hits 2,    config 6 -way
+smaller tournament 88, insn 10709375, accesses_since_last 131073, miss_sat 0, miss_rat 0.000208
+smaller tournament 88 outcome, insn 10710286, accesses 1025, hits 2,    config 6 -way
+smaller tournament 89, insn 10830891, accesses_since_last 131073, miss_sat 0, miss_rat 0.000208
+smaller tournament 89 outcome, insn 10831866, accesses 1093, hits 2,    config 6 -way
+smaller tournament 90, insn 10952156, accesses_since_last 131073, miss_sat 0, miss_rat 0.000207
+smaller tournament 90 outcome, insn 10953066, accesses 1071, hits 2,    config 6 -way
+smaller tournament 91, insn 11072972, accesses_since_last 131073, miss_sat 0, miss_rat 0.000207
+smaller tournament 91 outcome, insn 11073426, accesses 479, hits 2,    config 6 -way
+smaller tournament 92, insn 11193985, accesses_since_last 131073, miss_sat 0, miss_rat 0.000207
+smaller tournament 92 outcome, insn 11195051, accesses 1183, hits 2,    config 6 -way
+smaller tournament 93, insn 11314970, accesses_since_last 131073, miss_sat 0, miss_rat 0.000207
+smaller tournament 93 outcome, insn 11316208, accesses 1295, hits 2,    config 6 -way
+smaller tournament 94, insn 11436489, accesses_since_last 131073, miss_sat 0, miss_rat 0.000206
+smaller tournament 94 outcome, insn 11436846, accesses 376, hits 2,    config 6 -way
+smaller tournament 95, insn 11557028, accesses_since_last 131073, miss_sat 0, miss_rat 0.000206
+smaller tournament 95 outcome, insn 11558478, accesses 1671, hits 2,    config 6 -way
+smaller tournament 96, insn 11678547, accesses_since_last 131073, miss_sat 0, miss_rat 0.000206
+smaller tournament 96 outcome, insn 11678959, accesses 421, hits 2,    config 6 -way
+smaller tournament 97, insn 11799242, accesses_since_last 131073, miss_sat 0, miss_rat 0.000206
+smaller tournament 97 outcome, insn 11799937, accesses 818, hits 2,    config 6 -way
+smaller tournament 98, insn 11920462, accesses_since_last 131073, miss_sat 0, miss_rat 0.000206
+smaller tournament 98 outcome, insn 11922115, accesses 1785, hits 2,    config 6 -way
+smaller tournament 99, insn 12042724, accesses_since_last 131073, miss_sat 0, miss_rat 0.000205
+smaller tournament 99 outcome, insn 12044910, accesses 2372, hits 2,    config 6 -way
+smaller tournament 100, insn 12165471, accesses_since_last 131073, miss_sat 0, miss_rat 0.000205
+smaller tournament 100 outcome, insn 12166902, accesses 1561, hits 2,    config 6 -way
+smaller tournament 101, insn 12287451, accesses_since_last 131073, miss_sat 0, miss_rat 0.000205
+smaller tournament 101 outcome, insn 12289031, accesses 1719, hits 2,    config 6 -way
+smaller tournament 102, insn 12409629, accesses_since_last 131073, miss_sat 0, miss_rat 0.000205
+smaller tournament 102 outcome, insn 12411133, accesses 1644, hits 2,    config 6 -way
+smaller tournament 103, insn 12531658, accesses_since_last 131073, miss_sat 0, miss_rat 0.000204
+smaller tournament 103 outcome, insn 12532736, accesses 1219, hits 2,    config 6 -way
+smaller tournament 104, insn 12653241, accesses_since_last 131073, miss_sat 0, miss_rat 0.000204
+smaller tournament 104 outcome, insn 12654366, accesses 1255, hits 2,    config 6 -way
+smaller tournament 105, insn 12774773, accesses_since_last 131073, miss_sat 0, miss_rat 0.000204
+smaller tournament 105 outcome, insn 12776278, accesses 1721, hits 2,    config 6 -way
+smaller tournament 106, insn 12896885, accesses_since_last 131073, miss_sat 0, miss_rat 0.000204
+smaller tournament 106 outcome, insn 12897394, accesses 651, hits 2,    config 6 -way
+smaller tournament 107, insn 13017843, accesses_since_last 131073, miss_sat 0, miss_rat 0.000204
+smaller tournament 107 outcome, insn 13019092, accesses 1279, hits 2,    config 6 -way
+smaller tournament 108, insn 13139571, accesses_since_last 131073, miss_sat 0, miss_rat 0.000203
+smaller tournament 108 outcome, insn 13142003, accesses 2622, hits 2,    config 6 -way
+smaller tournament 109, insn 13262123, accesses_since_last 131073, miss_sat 0, miss_rat 0.000203
+smaller tournament 109 outcome, insn 13262438, accesses 332, hits 2,    config 6 -way
+smaller tournament 110, insn 13383069, accesses_since_last 131073, miss_sat 0, miss_rat 0.000203
+smaller tournament 110 outcome, insn 13383809, accesses 864, hits 2,    config 6 -way
+smaller tournament 111, insn 13504460, accesses_since_last 131073, miss_sat 0, miss_rat 0.000203
+smaller tournament 111 outcome, insn 13506599, accesses 2328, hits 2,    config 6 -way
+smaller tournament 112, insn 13627039, accesses_since_last 131073, miss_sat 0, miss_rat 0.000203
+smaller tournament 112 outcome, insn 13627377, accesses 356, hits 2,    config 6 -way
+smaller tournament 113, insn 13747882, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 113 outcome, insn 13748308, accesses 443, hits 2,    config 6 -way
+smaller tournament 114, insn 13868986, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 114 outcome, insn 13869461, accesses 517, hits 2,    config 6 -way
+smaller tournament 115, insn 13990108, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 115 outcome, insn 13991237, accesses 1255, hits 2,    config 6 -way
+smaller tournament 116, insn 14111839, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 116 outcome, insn 14113544, accesses 1856, hits 2,    config 6 -way
+smaller tournament 117, insn 14234065, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 117 outcome, insn 14235615, accesses 1684, hits 2,    config 6 -way
+smaller tournament 118, insn 14356265, accesses_since_last 131073, miss_sat 0, miss_rat 0.000202
+smaller tournament 118 outcome, insn 14357284, accesses 1145, hits 2,    config 6 -way
+smaller tournament 119, insn 14477859, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 119 outcome, insn 14479601, accesses 1906, hits 2,    config 6 -way
+smaller tournament 120, insn 14600295, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 120 outcome, insn 14601589, accesses 1419, hits 2,    config 6 -way
+smaller tournament 121, insn 14722242, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 121 outcome, insn 14723038, accesses 965, hits 2,    config 6 -way
+smaller tournament 122, insn 14843398, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 122 outcome, insn 14844611, accesses 1262, hits 2,    config 6 -way
+smaller tournament 123, insn 14965143, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 123 outcome, insn 14966031, accesses 926, hits 2,    config 6 -way
+smaller tournament 124, insn 15086642, accesses_since_last 131073, miss_sat 0, miss_rat 0.000201
+smaller tournament 124 outcome, insn 15086902, accesses 319, hits 2,    config 6 -way
+smaller tournament 125, insn 15207803, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 125 outcome, insn 15208927, accesses 1313, hits 2,    config 6 -way
+smaller tournament 126, insn 15329774, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 126 outcome, insn 15331428, accesses 1866, hits 2,    config 6 -way
+smaller tournament 127, insn 15452261, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 127 outcome, insn 15453717, accesses 1648, hits 2,    config 6 -way
+smaller tournament 128, insn 15574408, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 128 outcome, insn 15575519, accesses 1300, hits 2,    config 6 -way
+smaller tournament 129, insn 15696328, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 129 outcome, insn 15697776, accesses 1642, hits 2,    config 6 -way
+smaller tournament 130, insn 15818397, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 130 outcome, insn 15818852, accesses 562, hits 2,    config 6 -way
+smaller tournament 131, insn 15939535, accesses_since_last 131073, miss_sat 0, miss_rat 0.000200
+smaller tournament 131 outcome, insn 15939903, accesses 459, hits 2,    config 6 -way
+smaller tournament 132, insn 16060350, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 132 outcome, insn 16060735, accesses 429, hits 2,    config 6 -way
+smaller tournament 133, insn 16181468, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 133 outcome, insn 16181687, accesses 237, hits 2,    config 6 -way
+smaller tournament 134, insn 16302446, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 134 outcome, insn 16303706, accesses 1308, hits 2,    config 6 -way
+smaller tournament 135, insn 16424130, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 135 outcome, insn 16424421, accesses 329, hits 2,    config 6 -way
+smaller tournament 136, insn 16545009, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 136 outcome, insn 16546430, accesses 1544, hits 2,    config 6 -way
+smaller tournament 137, insn 16667050, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 137 outcome, insn 16668735, accesses 1854, hits 2,    config 6 -way
+smaller tournament 138, insn 16789296, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 138 outcome, insn 16789989, accesses 801, hits 2,    config 6 -way
+smaller tournament 139, insn 16910484, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 139 outcome, insn 16910873, accesses 408, hits 2,    config 6 -way
+smaller tournament 140, insn 17031612, accesses_since_last 131073, miss_sat 0, miss_rat 0.000199
+smaller tournament 140 outcome, insn 17032521, accesses 1014, hits 2,    config 6 -way
+smaller tournament 141, insn 17153115, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 141 outcome, insn 17154475, accesses 1484, hits 2,    config 6 -way
+smaller tournament 142, insn 17274973, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 142 outcome, insn 17276276, accesses 1439, hits 2,    config 6 -way
+smaller tournament 143, insn 17396871, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 143 outcome, insn 17398712, accesses 1994, hits 2,    config 6 -way
+smaller tournament 144, insn 17519380, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 144 outcome, insn 17520458, accesses 1204, hits 2,    config 6 -way
+smaller tournament 145, insn 17641105, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 145 outcome, insn 17642226, accesses 1247, hits 2,    config 6 -way
+smaller tournament 146, insn 17763055, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 146 outcome, insn 17764498, accesses 1587, hits 2,    config 6 -way
+smaller tournament 147, insn 17885086, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 147 outcome, insn 17886141, accesses 1200, hits 2,    config 6 -way
+smaller tournament 148, insn 18006712, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 148 outcome, insn 18008478, accesses 1917, hits 2,    config 6 -way
+smaller tournament 149, insn 18129047, accesses_since_last 131073, miss_sat 0, miss_rat 0.000198
+smaller tournament 149 outcome, insn 18130350, accesses 1472, hits 2,    config 6 -way
+smaller tournament 150, insn 18250900, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 150 outcome, insn 18251922, accesses 1059, hits 2,    config 6 -way
+smaller tournament 151, insn 18372371, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 151 outcome, insn 18372608, accesses 239, hits 2,    config 6 -way
+smaller tournament 152, insn 18493181, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 152 outcome, insn 18494355, accesses 1223, hits 2,    config 6 -way
+smaller tournament 153, insn 18615061, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 153 outcome, insn 18615336, accesses 299, hits 2,    config 6 -way
+smaller tournament 154, insn 18736166, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 154 outcome, insn 18737710, accesses 1772, hits 2,    config 6 -way
+smaller tournament 155, insn 18858468, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 155 outcome, insn 18858961, accesses 528, hits 2,    config 6 -way
+smaller tournament 156, insn 18979371, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 156 outcome, insn 18979526, accesses 154, hits 2,    config 6 -way
+smaller tournament 157, insn 19100032, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 157 outcome, insn 19101229, accesses 1348, hits 2,    config 6 -way
+smaller tournament 158, insn 19221843, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 158 outcome, insn 19223053, accesses 1346, hits 2,    config 6 -way
+smaller tournament 159, insn 19343571, accesses_since_last 131073, miss_sat 0, miss_rat 0.000197
+smaller tournament 159 outcome, insn 19345015, accesses 1580, hits 2,    config 6 -way
+smaller tournament 160, insn 19465591, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 160 outcome, insn 19467337, accesses 1909, hits 2,    config 6 -way
+smaller tournament 161, insn 19587766, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 161 outcome, insn 19588042, accesses 275, hits 2,    config 6 -way
+smaller tournament 162, insn 19708596, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 162 outcome, insn 19709264, accesses 774, hits 2,    config 6 -way
+smaller tournament 163, insn 19829870, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 163 outcome, insn 19830909, accesses 1185, hits 2,    config 6 -way
+smaller tournament 164, insn 19951126, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 164 outcome, insn 19951422, accesses 334, hits 2,    config 6 -way
+smaller tournament 165, insn 20071827, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 165 outcome, insn 20072883, accesses 1085, hits 2,    config 6 -way
+smaller tournament 166, insn 20193405, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 166 outcome, insn 20193889, accesses 504, hits 2,    config 6 -way
+smaller tournament 167, insn 20314447, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 167 outcome, insn 20315454, accesses 1053, hits 2,    config 6 -way
+smaller tournament 168, insn 20435986, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 168 outcome, insn 20437285, accesses 1335, hits 2,    config 6 -way
+smaller tournament 169, insn 20558057, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 169 outcome, insn 20558320, accesses 315, hits 2,    config 6 -way
+smaller tournament 170, insn 20678973, accesses_since_last 131073, miss_sat 0, miss_rat 0.000196
+smaller tournament 170 outcome, insn 20680296, accesses 1509, hits 2,    config 6 -way
+smaller tournament 171, insn 20800887, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 171 outcome, insn 20802251, accesses 1567, hits 2,    config 6 -way
+smaller tournament 172, insn 20922886, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 172 outcome, insn 20924359, accesses 1681, hits 2,    config 6 -way
+smaller tournament 173, insn 21045114, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 173 outcome, insn 21046535, accesses 1613, hits 2,    config 6 -way
+smaller tournament 174, insn 21166997, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 174 outcome, insn 21167832, accesses 880, hits 2,    config 6 -way
+smaller tournament 175, insn 21288418, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 175 outcome, insn 21289078, accesses 677, hits 2,    config 6 -way
+smaller tournament 176, insn 21409663, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 176 outcome, insn 21409933, accesses 270, hits 2,    config 6 -way
+smaller tournament 177, insn 21530510, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 177 outcome, insn 21531843, accesses 1380, hits 2,    config 6 -way
+smaller tournament 178, insn 21652339, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 178 outcome, insn 21654282, accesses 2112, hits 2,    config 6 -way
+smaller tournament 179, insn 21774773, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 179 outcome, insn 21776865, accesses 2287, hits 2,    config 6 -way
+smaller tournament 180, insn 21897188, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 180 outcome, insn 21897467, accesses 305, hits 2,    config 6 -way
+smaller tournament 181, insn 22017776, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 181 outcome, insn 22019126, accesses 1387, hits 2,    config 6 -way
+smaller tournament 182, insn 22139563, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 182 outcome, insn 22139980, accesses 434, hits 2,    config 6 -way
+smaller tournament 183, insn 22260629, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 183 outcome, insn 22260784, accesses 155, hits 2,    config 6 -way
+smaller tournament 184, insn 22381494, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 184 outcome, insn 22383663, accesses 2322, hits 2,    config 6 -way
+smaller tournament 185, insn 22504192, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 185 outcome, insn 22504628, accesses 454, hits 2,    config 6 -way
+smaller tournament 186, insn 22625112, accesses_since_last 131073, miss_sat 0, miss_rat 0.000195
+smaller tournament 186 outcome, insn 22627101, accesses 2152, hits 2,    config 6 -way
+smaller tournament 187, insn 22747605, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 187 outcome, insn 22747867, accesses 287, hits 2,    config 6 -way
+smaller tournament 188, insn 22868081, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 188 outcome, insn 22869023, accesses 978, hits 2,    config 6 -way
+smaller tournament 189, insn 22989265, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 189 outcome, insn 22989371, accesses 108, hits 2,    config 6 -way
+smaller tournament 190, insn 23109998, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 190 outcome, insn 23110752, accesses 866, hits 2,    config 6 -way
+smaller tournament 191, insn 23231298, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 191 outcome, insn 23231567, accesses 308, hits 2,    config 6 -way
+smaller tournament 192, insn 23351355, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 192 outcome, insn 23351528, accesses 173, hits 2,    config 6 -way
+smaller tournament 193, insn 23471753, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 193 outcome, insn 23472408, accesses 727, hits 2,    config 6 -way
+smaller tournament 194, insn 23592761, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 194 outcome, insn 23593300, accesses 603, hits 2,    config 6 -way
+smaller tournament 195, insn 23713371, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 195 outcome, insn 23714482, accesses 1243, hits 2,    config 6 -way
+smaller tournament 196, insn 23834534, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 196 outcome, insn 23834826, accesses 298, hits 2,    config 6 -way
+smaller tournament 197, insn 23955164, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 197 outcome, insn 23955339, accesses 207, hits 2,    config 6 -way
+smaller tournament 198, insn 24075310, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 198 outcome, insn 24075776, accesses 501, hits 2,    config 6 -way
+smaller tournament 199, insn 24195778, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 199 outcome, insn 24197701, accesses 2078, hits 2,    config 6 -way
+smaller tournament 200, insn 24317979, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 200 outcome, insn 24320112, accesses 2320, hits 2,    config 6 -way
+smaller tournament 201, insn 24440664, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 201 outcome, insn 24442334, accesses 1800, hits 2,    config 6 -way
+smaller tournament 202, insn 24562741, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 202 outcome, insn 24563060, accesses 346, hits 2,    config 6 -way
+smaller tournament 203, insn 24683448, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 203 outcome, insn 24684971, accesses 1725, hits 2,    config 6 -way
+smaller tournament 204, insn 24805442, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 204 outcome, insn 24806989, accesses 1759, hits 2,    config 6 -way
+smaller tournament 205, insn 24927414, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 205 outcome, insn 24927890, accesses 607, hits 2,    config 6 -way
+smaller tournament 206, insn 25048300, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 206 outcome, insn 25048608, accesses 326, hits 2,    config 6 -way
+smaller tournament 207, insn 25169092, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 207 outcome, insn 25169585, accesses 510, hits 2,    config 6 -way
+smaller tournament 208, insn 25289877, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 208 outcome, insn 25290700, accesses 952, hits 2,    config 6 -way
+smaller tournament 209, insn 25411008, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 209 outcome, insn 25411572, accesses 661, hits 2,    config 6 -way
+smaller tournament 210, insn 25531771, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 210 outcome, insn 25534110, accesses 2607, hits 2,    config 6 -way
+smaller tournament 211, insn 25654508, accesses_since_last 131073, miss_sat 0, miss_rat 0.000194
+smaller tournament 211 outcome, insn 25654620, accesses 111, hits 2,    config 6 -way
+smaller tournament 212, insn 25775219, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 212 outcome, insn 25776094, accesses 992, hits 2,    config 6 -way
+smaller tournament 213, insn 25896353, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 213 outcome, insn 25897182, accesses 953, hits 2,    config 6 -way
+smaller tournament 214, insn 26017595, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 214 outcome, insn 26018828, accesses 1410, hits 2,    config 6 -way
+smaller tournament 215, insn 26139374, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 215 outcome, insn 26139641, accesses 297, hits 2,    config 6 -way
+smaller tournament 216, insn 26260250, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 216 outcome, insn 26260798, accesses 689, hits 2,    config 6 -way
+smaller tournament 217, insn 26381388, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 217 outcome, insn 26382748, accesses 1562, hits 2,    config 6 -way
+smaller tournament 218, insn 26503325, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 218 outcome, insn 26503696, accesses 462, hits 2,    config 6 -way
+smaller tournament 219, insn 26624217, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 219 outcome, insn 26624592, accesses 402, hits 2,    config 6 -way
+smaller tournament 220, insn 26745296, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 220 outcome, insn 26746123, accesses 988, hits 2,    config 6 -way
+smaller tournament 221, insn 26866606, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 221 outcome, insn 26867921, accesses 1363, hits 2,    config 6 -way
+smaller tournament 222, insn 26988308, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 222 outcome, insn 26988944, accesses 743, hits 2,    config 6 -way
+smaller tournament 223, insn 27109435, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 223 outcome, insn 27110397, accesses 1089, hits 2,    config 6 -way
+smaller tournament 224, insn 27230713, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 224 outcome, insn 27231485, accesses 925, hits 2,    config 6 -way
+smaller tournament 225, insn 27352095, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 225 outcome, insn 27353630, accesses 1746, hits 2,    config 6 -way
+smaller tournament 226, insn 27474043, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 226 outcome, insn 27475520, accesses 1534, hits 2,    config 6 -way
+smaller tournament 227, insn 27596084, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 227 outcome, insn 27597217, accesses 1192, hits 2,    config 6 -way
+smaller tournament 228, insn 27717861, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 228 outcome, insn 27718390, accesses 547, hits 2,    config 6 -way
+smaller tournament 229, insn 27838916, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 229 outcome, insn 27839218, accesses 308, hits 2,    config 6 -way
+smaller tournament 230, insn 27959989, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 230 outcome, insn 27960879, accesses 928, hits 2,    config 6 -way
+smaller tournament 231, insn 28081384, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 231 outcome, insn 28083630, accesses 2410, hits 2,    config 6 -way
+smaller tournament 232, insn 28204218, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 232 outcome, insn 28206043, accesses 1994, hits 2,    config 6 -way
+smaller tournament 233, insn 28326587, accesses_since_last 131073, miss_sat 0, miss_rat 0.000193
+smaller tournament 233 outcome, insn 28328124, accesses 1749, hits 2,    config 6 -way
+smaller tournament 234, insn 28448618, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 234 outcome, insn 28448829, accesses 241, hits 2,    config 6 -way
+smaller tournament 235, insn 28569365, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 235 outcome, insn 28572024, accesses 2875, hits 2,    config 6 -way
+smaller tournament 236, insn 28692350, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 236 outcome, insn 28692717, accesses 447, hits 2,    config 6 -way
+smaller tournament 237, insn 28813212, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 237 outcome, insn 28815722, accesses 2717, hits 2,    config 6 -way
+smaller tournament 238, insn 28936311, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 238 outcome, insn 28937000, accesses 789, hits 2,    config 6 -way
+smaller tournament 239, insn 29057403, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 239 outcome, insn 29058254, accesses 968, hits 2,    config 6 -way
+smaller tournament 240, insn 29178682, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 240 outcome, insn 29179868, accesses 1355, hits 2,    config 6 -way
+smaller tournament 241, insn 29300579, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 241 outcome, insn 29301982, accesses 1596, hits 2,    config 6 -way
+smaller tournament 242, insn 29422660, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 242 outcome, insn 29423965, accesses 1492, hits 2,    config 6 -way
+smaller tournament 243, insn 29544410, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 243 outcome, insn 29544723, accesses 351, hits 2,    config 6 -way
+smaller tournament 244, insn 29665315, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 244 outcome, insn 29666711, accesses 1598, hits 2,    config 6 -way
+smaller tournament 245, insn 29787392, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 245 outcome, insn 29787620, accesses 245, hits 2,    config 6 -way
+smaller tournament 246, insn 29908078, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 246 outcome, insn 29908449, accesses 398, hits 2,    config 6 -way
+smaller tournament 247, insn 30029283, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 247 outcome, insn 30029679, accesses 476, hits 2,    config 6 -way
+smaller tournament 248, insn 30150306, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 248 outcome, insn 30150623, accesses 360, hits 2,    config 6 -way
+smaller tournament 249, insn 30271048, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 249 outcome, insn 30271394, accesses 420, hits 2,    config 6 -way
+smaller tournament 250, insn 30391861, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 250 outcome, insn 30394544, accesses 2885, hits 2,    config 6 -way
+smaller tournament 251, insn 30514974, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 251 outcome, insn 30515769, accesses 913, hits 2,    config 6 -way
+smaller tournament 252, insn 30636005, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 252 outcome, insn 30636297, accesses 332, hits 2,    config 6 -way
+smaller tournament 253, insn 30756610, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 253 outcome, insn 30757009, accesses 449, hits 2,    config 6 -way
+smaller tournament 254, insn 30877654, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 254 outcome, insn 30878003, accesses 393, hits 2,    config 6 -way
+smaller tournament 255, insn 30998394, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 255 outcome, insn 30998887, accesses 570, hits 2,    config 6 -way
+smaller tournament 256, insn 31119564, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 256 outcome, insn 31119916, accesses 397, hits 2,    config 6 -way
+smaller tournament 257, insn 31240314, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 257 outcome, insn 31240773, accesses 522, hits 2,    config 6 -way
+smaller tournament 258, insn 31361324, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 258 outcome, insn 31361756, accesses 533, hits 2,    config 6 -way
+smaller tournament 259, insn 31482132, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 259 outcome, insn 31482270, accesses 169, hits 2,    config 6 -way
+smaller tournament 260, insn 31602917, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 260 outcome, insn 31603439, accesses 672, hits 2,    config 6 -way
+smaller tournament 261, insn 31723943, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 261 outcome, insn 31725221, accesses 1464, hits 2,    config 6 -way
+smaller tournament 262, insn 31845525, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 262 outcome, insn 31846593, accesses 1114, hits 2,    config 6 -way
+smaller tournament 263, insn 31967078, accesses_since_last 131073, miss_sat 0, miss_rat 0.000192
+smaller tournament 263 outcome, insn 31968724, accesses 1799, hits 2,    config 6 -way
+smaller tournament 264, insn 32089247, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 264 outcome, insn 32089353, accesses 105, hits 2,    config 6 -way
+smaller tournament 265, insn 32209490, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 265 outcome, insn 32209662, accesses 172, hits 2,    config 6 -way
+smaller tournament 266, insn 32329652, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 266 outcome, insn 32330084, accesses 483, hits 2,    config 6 -way
+smaller tournament 267, insn 32450503, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 267 outcome, insn 32452855, accesses 2526, hits 2,    config 6 -way
+smaller tournament 268, insn 32573397, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 268 outcome, insn 32573694, accesses 316, hits 2,    config 6 -way
+smaller tournament 269, insn 32694262, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 269 outcome, insn 32695858, accesses 1720, hits 2,    config 6 -way
+smaller tournament 270, insn 32816547, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 270 outcome, insn 32817189, accesses 738, hits 2,    config 6 -way
+smaller tournament 271, insn 32937800, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 271 outcome, insn 32938639, accesses 956, hits 2,    config 6 -way
+smaller tournament 272, insn 33059088, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 272 outcome, insn 33059430, accesses 362, hits 2,    config 6 -way
+smaller tournament 273, insn 33179984, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 273 outcome, insn 33181598, accesses 1841, hits 2,    config 6 -way
+smaller tournament 274, insn 33302181, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 274 outcome, insn 33302718, accesses 677, hits 2,    config 6 -way
+smaller tournament 275, insn 33423168, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 275 outcome, insn 33424000, accesses 869, hits 2,    config 6 -way
+smaller tournament 276, insn 33544584, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 276 outcome, insn 33546652, accesses 2222, hits 2,    config 6 -way
+smaller tournament 277, insn 33667158, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 277 outcome, insn 33668554, accesses 1531, hits 2,    config 6 -way
+smaller tournament 278, insn 33789087, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 278 outcome, insn 33789480, accesses 412, hits 2,    config 6 -way
+smaller tournament 279, insn 33909618, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 279 outcome, insn 33910700, accesses 1118, hits 2,    config 6 -way
+smaller tournament 280, insn 34031101, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 280 outcome, insn 34033121, accesses 2179, hits 2,    config 6 -way
+smaller tournament 281, insn 34153388, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 281 outcome, insn 34153856, accesses 523, hits 2,    config 6 -way
+smaller tournament 282, insn 34274154, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 282 outcome, insn 34275208, accesses 1089, hits 2,    config 6 -way
+smaller tournament 283, insn 34395420, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 283 outcome, insn 34397401, accesses 2133, hits 2,    config 6 -way
+smaller tournament 284, insn 34517671, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 284 outcome, insn 34518796, accesses 1171, hits 2,    config 6 -way
+smaller tournament 285, insn 34639508, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 285 outcome, insn 34640619, accesses 1148, hits 2,    config 6 -way
+smaller tournament 286, insn 34760988, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 286 outcome, insn 34762537, accesses 1684, hits 2,    config 6 -way
+smaller tournament 287, insn 34882972, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 287 outcome, insn 34884131, accesses 1303, hits 2,    config 6 -way
+smaller tournament 288, insn 35004685, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 288 outcome, insn 35006252, accesses 1778, hits 2,    config 6 -way
+smaller tournament 289, insn 35126834, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 289 outcome, insn 35127377, accesses 693, hits 2,    config 6 -way
+smaller tournament 290, insn 35247894, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 290 outcome, insn 35249179, accesses 1324, hits 2,    config 6 -way
+smaller tournament 291, insn 35369513, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 291 outcome, insn 35372214, accesses 2892, hits 2,    config 6 -way
+smaller tournament 292, insn 35492564, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 292 outcome, insn 35493742, accesses 1327, hits 2,    config 6 -way
+smaller tournament 293, insn 35614202, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 293 outcome, insn 35614668, accesses 498, hits 2,    config 6 -way
+smaller tournament 294, insn 35734607, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 294 outcome, insn 35736509, accesses 2073, hits 2,    config 6 -way
+smaller tournament 295, insn 35856864, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 295 outcome, insn 35858210, accesses 1491, hits 2,    config 6 -way
+smaller tournament 296, insn 35978822, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 296 outcome, insn 35980146, accesses 1465, hits 2,    config 6 -way
+smaller tournament 297, insn 36100602, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 297 outcome, insn 36100908, accesses 322, hits 2,    config 6 -way
+smaller tournament 298, insn 36221013, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 298 outcome, insn 36222866, accesses 2026, hits 2,    config 6 -way
+smaller tournament 299, insn 36343026, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 299 outcome, insn 36343701, accesses 753, hits 2,    config 6 -way
+smaller tournament 300, insn 36463869, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 300 outcome, insn 36465468, accesses 1730, hits 2,    config 6 -way
+smaller tournament 301, insn 36585498, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 301 outcome, insn 36585907, accesses 497, hits 2,    config 6 -way
+smaller tournament 302, insn 36706065, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 302 outcome, insn 36708142, accesses 2220, hits 2,    config 6 -way
+smaller tournament 303, insn 36828833, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 303 outcome, insn 36830477, accesses 1787, hits 2,    config 6 -way
+smaller tournament 304, insn 36951012, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 304 outcome, insn 36952132, accesses 1273, hits 2,    config 6 -way
+smaller tournament 305, insn 37072500, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 305 outcome, insn 37072798, accesses 302, hits 2,    config 6 -way
+smaller tournament 306, insn 37193104, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 306 outcome, insn 37194223, accesses 1318, hits 2,    config 6 -way
+smaller tournament 307, insn 37314634, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 307 outcome, insn 37314922, accesses 290, hits 2,    config 6 -way
+smaller tournament 308, insn 37435322, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 308 outcome, insn 37437169, accesses 2015, hits 2,    config 6 -way
+smaller tournament 309, insn 37557378, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 309 outcome, insn 37558711, accesses 1535, hits 2,    config 6 -way
+smaller tournament 310, insn 37679457, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 310 outcome, insn 37681012, accesses 1763, hits 2,    config 6 -way
+smaller tournament 311, insn 37801500, accesses_since_last 131073, miss_sat 0, miss_rat 0.000191
+smaller tournament 311 outcome, insn 37801975, accesses 595, hits 2,    config 6 -way
+smaller tournament 312, insn 37922618, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 312 outcome, insn 37923570, accesses 1111, hits 2,    config 6 -way
+smaller tournament 313, insn 38044065, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 313 outcome, insn 38044276, accesses 241, hits 2,    config 6 -way
+smaller tournament 314, insn 38164655, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 314 outcome, insn 38165519, accesses 901, hits 2,    config 6 -way
+smaller tournament 315, insn 38285626, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 315 outcome, insn 38287352, accesses 1867, hits 2,    config 6 -way
+smaller tournament 316, insn 38407587, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 316 outcome, insn 38408435, accesses 990, hits 2,    config 6 -way
+smaller tournament 317, insn 38529071, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 317 outcome, insn 38530598, accesses 1750, hits 2,    config 6 -way
+smaller tournament 318, insn 38651097, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 318 outcome, insn 38651550, accesses 552, hits 2,    config 6 -way
+smaller tournament 319, insn 38772136, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 319 outcome, insn 38772856, accesses 870, hits 2,    config 6 -way
+smaller tournament 320, insn 38893164, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 320 outcome, insn 38893890, accesses 761, hits 2,    config 6 -way
+smaller tournament 321, insn 39014309, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 321 outcome, insn 39015908, accesses 1744, hits 2,    config 6 -way
+smaller tournament 322, insn 39136383, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 322 outcome, insn 39137752, accesses 1493, hits 2,    config 6 -way
+smaller tournament 323, insn 39258324, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 323 outcome, insn 39258710, accesses 423, hits 2,    config 6 -way
+smaller tournament 324, insn 39379362, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 324 outcome, insn 39381002, accesses 1770, hits 2,    config 6 -way
+smaller tournament 325, insn 39501566, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 325 outcome, insn 39501842, accesses 277, hits 2,    config 6 -way
+smaller tournament 326, insn 39622535, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 326 outcome, insn 39623100, accesses 627, hits 2,    config 6 -way
+smaller tournament 327, insn 39743822, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 327 outcome, insn 39744797, accesses 1080, hits 2,    config 6 -way
+smaller tournament 328, insn 39865353, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 328 outcome, insn 39865758, accesses 431, hits 2,    config 6 -way
+smaller tournament 329, insn 39986417, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 329 outcome, insn 39987054, accesses 736, hits 2,    config 6 -way
+smaller tournament 330, insn 40107399, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 330 outcome, insn 40107795, accesses 489, hits 2,    config 6 -way
+smaller tournament 331, insn 40228309, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 331 outcome, insn 40229163, accesses 901, hits 2,    config 6 -way
+smaller tournament 332, insn 40349819, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 332 outcome, insn 40350972, accesses 1205, hits 2,    config 6 -way
+smaller tournament 333, insn 40471565, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 333 outcome, insn 40472057, accesses 509, hits 2,    config 6 -way
+smaller tournament 334, insn 40592788, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 334 outcome, insn 40592986, accesses 228, hits 2,    config 6 -way
+smaller tournament 335, insn 40713678, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 335 outcome, insn 40713991, accesses 362, hits 2,    config 6 -way
+smaller tournament 336, insn 40834712, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 336 outcome, insn 40836165, accesses 1661, hits 2,    config 6 -way
+smaller tournament 337, insn 40956782, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 337 outcome, insn 40958028, accesses 1449, hits 2,    config 6 -way
+smaller tournament 338, insn 41078559, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 338 outcome, insn 41078963, accesses 492, hits 2,    config 6 -way
+smaller tournament 339, insn 41199723, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 339 outcome, insn 41200526, accesses 968, hits 2,    config 6 -way
+smaller tournament 340, insn 41320959, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 340 outcome, insn 41321220, accesses 291, hits 2,    config 6 -way
+smaller tournament 341, insn 41441842, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 341 outcome, insn 41442082, accesses 273, hits 2,    config 6 -way
+smaller tournament 342, insn 41562549, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 342 outcome, insn 41562669, accesses 150, hits 2,    config 6 -way
+smaller tournament 343, insn 41683244, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 343 outcome, insn 41684214, accesses 1005, hits 2,    config 6 -way
+smaller tournament 344, insn 41804634, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 344 outcome, insn 41804937, accesses 341, hits 2,    config 6 -way
+smaller tournament 345, insn 41925366, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 345 outcome, insn 41926258, accesses 1009, hits 2,    config 6 -way
+smaller tournament 346, insn 42046955, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 346 outcome, insn 42047906, accesses 1067, hits 2,    config 6 -way
+smaller tournament 347, insn 42168382, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 347 outcome, insn 42168844, accesses 533, hits 2,    config 6 -way
+smaller tournament 348, insn 42289248, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 348 outcome, insn 42290807, accesses 1756, hits 2,    config 6 -way
+smaller tournament 349, insn 42411405, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 349 outcome, insn 42412274, accesses 1038, hits 2,    config 6 -way
+smaller tournament 350, insn 42532932, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 350 outcome, insn 42534392, accesses 1656, hits 2,    config 6 -way
+smaller tournament 351, insn 42654913, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 351 outcome, insn 42655988, accesses 1250, hits 2,    config 6 -way
+smaller tournament 352, insn 42776576, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 352 outcome, insn 42777608, accesses 1202, hits 2,    config 6 -way
+smaller tournament 353, insn 42898439, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 353 outcome, insn 42899884, accesses 1640, hits 2,    config 6 -way
+smaller tournament 354, insn 43020618, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 354 outcome, insn 43021474, accesses 1014, hits 2,    config 6 -way
+smaller tournament 355, insn 43142157, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 355 outcome, insn 43142706, accesses 699, hits 2,    config 6 -way
+smaller tournament 356, insn 43263386, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 356 outcome, insn 43264714, accesses 1509, hits 2,    config 6 -way
+smaller tournament 357, insn 43385229, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 357 outcome, insn 43385656, accesses 515, hits 2,    config 6 -way
+smaller tournament 358, insn 43506300, accesses_since_last 131073, miss_sat 0, miss_rat 0.000190
+smaller tournament 358 outcome, insn 43506978, accesses 707, hits 2,    config 6 -way
+smaller tournament 359, insn 43627473, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 359 outcome, insn 43629265, accesses 1935, hits 2,    config 6 -way
+smaller tournament 360, insn 43749831, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 360 outcome, insn 43750243, accesses 439, hits 2,    config 6 -way
+smaller tournament 361, insn 43870806, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 361 outcome, insn 43871315, accesses 545, hits 2,    config 6 -way
+smaller tournament 362, insn 43991968, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 362 outcome, insn 43993676, accesses 1843, hits 2,    config 6 -way
+smaller tournament 363, insn 44114283, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 363 outcome, insn 44115340, accesses 1164, hits 2,    config 6 -way
+smaller tournament 364, insn 44236046, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 364 outcome, insn 44237526, accesses 1626, hits 2,    config 6 -way
+smaller tournament 365, insn 44357945, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 365 outcome, insn 44358791, accesses 956, hits 2,    config 6 -way
+smaller tournament 366, insn 44479190, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 366 outcome, insn 44479556, accesses 368, hits 2,    config 6 -way
+smaller tournament 367, insn 44600126, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 367 outcome, insn 44600500, accesses 392, hits 2,    config 6 -way
+smaller tournament 368, insn 44721066, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 368 outcome, insn 44721949, accesses 1001, hits 2,    config 6 -way
+smaller tournament 369, insn 44842426, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 369 outcome, insn 44843219, accesses 911, hits 2,    config 6 -way
+smaller tournament 370, insn 44963769, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 370 outcome, insn 44964528, accesses 868, hits 2,    config 6 -way
+smaller tournament 371, insn 45085010, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 371 outcome, insn 45085153, accesses 142, hits 2,    config 6 -way
+smaller tournament 372, insn 45205753, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 372 outcome, insn 45206160, accesses 427, hits 2,    config 6 -way
+smaller tournament 373, insn 45326497, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 373 outcome, insn 45327428, accesses 1036, hits 2,    config 6 -way
+smaller tournament 374, insn 45447982, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 374 outcome, insn 45448567, accesses 736, hits 2,    config 6 -way
+smaller tournament 375, insn 45569156, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 375 outcome, insn 45570500, accesses 1380, hits 2,    config 6 -way
+smaller tournament 376, insn 45691061, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 376 outcome, insn 45691231, accesses 169, hits 2,    config 6 -way
+smaller tournament 377, insn 45811880, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 377 outcome, insn 45812924, accesses 1080, hits 2,    config 6 -way
+smaller tournament 378, insn 45933539, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 378 outcome, insn 45934611, accesses 1109, hits 2,    config 6 -way
+smaller tournament 379, insn 46055260, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 379 outcome, insn 46058082, accesses 3043, hits 2,    config 6 -way
+smaller tournament 380, insn 46178786, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 380 outcome, insn 46180532, accesses 1888, hits 2,    config 6 -way
+smaller tournament 381, insn 46300853, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 381 outcome, insn 46301702, accesses 1019, hits 2,    config 6 -way
+smaller tournament 382, insn 46422142, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 382 outcome, insn 46424930, accesses 2994, hits 2,    config 6 -way
+smaller tournament 383, insn 46545397, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 383 outcome, insn 46547843, accesses 2664, hits 2,    config 6 -way
+smaller tournament 384, insn 46668384, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 384 outcome, insn 46669491, accesses 1242, hits 2,    config 6 -way
+smaller tournament 385, insn 46790006, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 385 outcome, insn 46790461, accesses 465, hits 2,    config 6 -way
+smaller tournament 386, insn 46910843, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 386 outcome, insn 46912864, accesses 2182, hits 2,    config 6 -way
+smaller tournament 387, insn 47033289, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 387 outcome, insn 47033875, accesses 737, hits 2,    config 6 -way
+smaller tournament 388, insn 47154182, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 388 outcome, insn 47155529, accesses 1398, hits 2,    config 6 -way
+smaller tournament 389, insn 47275910, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 389 outcome, insn 47277406, accesses 1652, hits 2,    config 6 -way
+smaller tournament 390, insn 47397586, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 390 outcome, insn 47397724, accesses 168, hits 2,    config 6 -way
+smaller tournament 391, insn 47518423, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 391 outcome, insn 47519268, accesses 1008, hits 2,    config 6 -way
+smaller tournament 392, insn 47639920, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 392 outcome, insn 47640245, accesses 378, hits 2,    config 6 -way
+smaller tournament 393, insn 47760986, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 393 outcome, insn 47762085, accesses 1272, hits 2,    config 6 -way
+smaller tournament 394, insn 47882383, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 394 outcome, insn 47883589, accesses 1244, hits 2,    config 6 -way
+smaller tournament 395, insn 48003871, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 395 outcome, insn 48005510, accesses 1777, hits 2,    config 6 -way
+smaller tournament 396, insn 48125508, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 396 outcome, insn 48126612, accesses 1139, hits 2,    config 6 -way
+smaller tournament 397, insn 48246827, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 397 outcome, insn 48249584, accesses 3049, hits 2,    config 6 -way
+smaller tournament 398, insn 48369878, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 398 outcome, insn 48370681, accesses 946, hits 2,    config 6 -way
+smaller tournament 399, insn 48491151, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 399 outcome, insn 48491779, accesses 700, hits 2,    config 6 -way
+smaller tournament 400, insn 48611756, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 400 outcome, insn 48612043, accesses 321, hits 2,    config 6 -way
+smaller tournament 401, insn 48732101, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 401 outcome, insn 48732770, accesses 784, hits 2,    config 6 -way
+smaller tournament 402, insn 48853192, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 402 outcome, insn 48854877, accesses 1906, hits 2,    config 6 -way
+smaller tournament 403, insn 48975034, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 403 outcome, insn 48975177, accesses 143, hits 2,    config 6 -way
+smaller tournament 404, insn 49095207, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 404 outcome, insn 49097211, accesses 2235, hits 2,    config 6 -way
+smaller tournament 405, insn 49217610, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 405 outcome, insn 49218675, accesses 1235, hits 2,    config 6 -way
+smaller tournament 406, insn 49338790, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 406 outcome, insn 49339097, accesses 347, hits 2,    config 6 -way
+smaller tournament 407, insn 49459020, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 407 outcome, insn 49459501, accesses 500, hits 2,    config 6 -way
+smaller tournament 408, insn 49579410, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 408 outcome, insn 49579677, accesses 298, hits 2,    config 6 -way
+smaller tournament 409, insn 49700299, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 409 outcome, insn 49701558, accesses 1456, hits 2,    config 6 -way
+smaller tournament 410, insn 49822036, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 410 outcome, insn 49823083, accesses 1098, hits 2,    config 6 -way
+smaller tournament 411, insn 49943695, accesses_since_last 131073, miss_sat 0, miss_rat 0.000189
+smaller tournament 411 outcome, insn 49944480, accesses 895, hits 2,    config 6 -way
+
+sim: ** simulation statistics **
+sim_num_insn               50000000 # total number of instructions committed
+sim_num_refs               17683714 # total number of loads and stores committed
+sim_num_loads              13430503 # total number of loads committed
+sim_num_stores         4253211.0000 # total number of stores committed
+sim_num_branches            8255502 # total number of branches committed
+sim_elapsed_time                 95 # total simulation time in seconds
+sim_inst_rate           526315.7895 # simulation speed (in insts/sec)
+sim_total_insn             53280633 # total number of instructions executed
+sim_total_refs             18689177 # total number of loads and stores executed
+sim_total_loads            14274176 # total number of loads executed
+sim_total_stores       4415001.0000 # total number of stores executed
+sim_total_branches          8815905 # total number of branches executed
+sim_cycle                  24146223 # total simulation time in cycles
+sim_IPC                      2.0707 # instructions per cycle
+sim_CPI                      0.4829 # cycles per instruction
+sim_exec_BW                  2.2066 # total instructions (mis-spec + committed) per cycle
+sim_IPB                      6.0566 # instruction per branch
+Cache_Config_Ratio     <error: variable is undefined> # Cache_Run_Ratio
+IFQ_count                  84694884 # cumulative IFQ occupancy
+IFQ_fcount                 19110232 # cumulative IFQ full count
+ifq_occupancy                3.5076 # avg IFQ occupancy (insn's)
+ifq_rate                     2.2066 # avg IFQ dispatch rate (insn/cycle)
+ifq_latency                  1.5896 # avg IFQ occupant latency (cycle's)
+ifq_full                     0.7914 # fraction of time (cycle's) IFQ was full
+RUU_count                 334853678 # cumulative RUU occupancy
+RUU_fcount                 13191771 # cumulative RUU full count
+ruu_occupancy               13.8677 # avg RUU occupancy (insn's)
+ruu_rate                     2.2066 # avg RUU dispatch rate (insn/cycle)
+ruu_latency                  6.2847 # avg RUU occupant latency (cycle's)
+ruu_full                     0.5463 # fraction of time (cycle's) RUU was full
+LSQ_count                 119794467 # cumulative LSQ occupancy
+LSQ_fcount                  3190907 # cumulative LSQ full count
+lsq_occupancy                4.9612 # avg LSQ occupancy (insn's)
+lsq_rate                     2.2066 # avg LSQ dispatch rate (insn/cycle)
+lsq_latency                  2.2484 # avg LSQ occupant latency (cycle's)
+lsq_full                     0.1321 # fraction of time (cycle's) LSQ was full
+sim_slip                  502749290 # total number of slip cycles
+avg_sim_slip                10.0550 # the average slip between issue and retirement
+bpred_bimod.lookups         8994362 # total number of bpred lookups
+bpred_bimod.updates         8255497 # total number of updates
+bpred_bimod.addr_hits       7912689 # total number of address-predicted hits
+bpred_bimod.dir_hits        7912826 # total number of direction-predicted hits (includes addr-hits)
+bpred_bimod.misses           342671 # total number of misses
+bpred_bimod.jr_hits         1367533 # total number of address-predicted hits for JR's
+bpred_bimod.jr_seen         1382532 # total number of JR's seen
+bpred_bimod.jr_non_ras_hits.PP       124882 # total number of address-predicted hits for non-RAS JR's
+bpred_bimod.jr_non_ras_seen.PP       139874 # total number of non-RAS JR's seen
+bpred_bimod.bpred_addr_rate    0.9585 # branch address-prediction rate (i.e., addr-hits/updates)
+bpred_bimod.bpred_dir_rate    0.9585 # branch direction-prediction rate (i.e., all-hits/updates)
+bpred_bimod.bpred_jr_rate    0.9892 # JR address-prediction rate (i.e., JR addr-hits/JRs seen)
+bpred_bimod.bpred_jr_non_ras_rate.PP    0.8928 # non-RAS JR addr-pred rate (ie, non-RAS JR hits/JRs seen)
+bpred_bimod.retstack_pushes      1308204 # total number of address pushed onto ret-addr stack
+bpred_bimod.retstack_pops      1259826 # total number of address popped off of ret-addr stack
+bpred_bimod.used_ras.PP      1242658 # total number of RAS predictions used
+bpred_bimod.ras_hits.PP      1242651 # total number of RAS hits
+bpred_bimod.ras_rate.PP    1.0000 # RAS prediction rate (i.e., RAS hits/used RAS)
+il1.reconfigurations              2 # total number of reconfigurations
+il1.tournaments                 411 # total number of tournaments
+il1. Power-Saving      54255582.0000 # Power Saving 
+il1. Smaller Cache Cnt      54255581 # SCC 
+il1. Largerer Cache Cnt             0 # LCC 
+il1.accesses               54394847 # total number of accesses
+il1.hits                   54384566 # total number of hits
+il1.misses                    10281 # total number of misses
+il1.mnm_misses                    0 # total number MNM of misses
+il1.replacements               9940 # total number of replacements
+il1.writebacks                    0 # total number of writebacks
+il1.invalidations                 0 # total number of invalidations
+il1.miss_rate                0.0002 # miss rate (i.e., misses/ref)
+il1.repl_rate                0.0002 # replacement rate (i.e., repls/ref)
+il1.wb_rate                  0.0000 # writeback rate (i.e., wrbks/ref)
+il1.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
+dl1.accesses               18034439 # total number of accesses
+dl1.hits                   17234287 # total number of hits
+dl1.misses                   800152 # total number of misses
+dl1.mnm_misses                    0 # total number MNM of misses
+dl1.replacements             800024 # total number of replacements
+dl1.writebacks               234541 # total number of writebacks
+dl1.invalidations                 0 # total number of invalidations
+dl1.miss_rate                0.0444 # miss rate (i.e., misses/ref)
+dl1.repl_rate                0.0444 # replacement rate (i.e., repls/ref)
+dl1.wb_rate                  0.0130 # writeback rate (i.e., wrbks/ref)
+dl1.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
+dl2.accesses                1044974 # total number of accesses
+dl2.hits                    1040809 # total number of hits
+dl2.misses                     4165 # total number of misses
+dl2.mnm_misses                  329 # total number MNM of misses
+dl2.replacements               3141 # total number of replacements
+dl2.writebacks                 2190 # total number of writebacks
+dl2.invalidations                 0 # total number of invalidations
+dl2.miss_rate                0.0040 # miss rate (i.e., misses/ref)
+dl2.repl_rate                0.0030 # replacement rate (i.e., repls/ref)
+dl2.wb_rate                  0.0021 # writeback rate (i.e., wrbks/ref)
+dl2.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
+dl3.accesses                   6355 # total number of accesses
+dl3.hits                       2518 # total number of hits
+dl3.misses                     3837 # total number of misses
+dl3.mnm_misses                    1 # total number MNM of misses
+dl3.replacements                281 # total number of replacements
+dl3.writebacks                   92 # total number of writebacks
+dl3.invalidations                 0 # total number of invalidations
+dl3.miss_rate                0.6038 # miss rate (i.e., misses/ref)
+dl3.repl_rate                0.0442 # replacement rate (i.e., repls/ref)
+dl3.wb_rate                  0.0145 # writeback rate (i.e., wrbks/ref)
+dl3.inv_rate                 0.0000 # invalidation rate (i.e., invs/ref)
+itlb.accesses              54394847 # total number of accesses
+itlb.hits                  54394828 # total number of hits
+itlb.misses                      19 # total number of misses
+itlb.mnm_misses                   0 # total number MNM of misses
+itlb.replacements                 0 # total number of replacements
+itlb.writebacks                   0 # total number of writebacks
+itlb.invalidations                0 # total number of invalidations
+itlb.miss_rate               0.0000 # miss rate (i.e., misses/ref)
+itlb.repl_rate               0.0000 # replacement rate (i.e., repls/ref)
+itlb.wb_rate                 0.0000 # writeback rate (i.e., wrbks/ref)
+itlb.inv_rate                0.0000 # invalidation rate (i.e., invs/ref)
+dtlb.accesses              18214418 # total number of accesses
+dtlb.hits                  18214345 # total number of hits
+dtlb.misses                      73 # total number of misses
+dtlb.mnm_misses                   0 # total number MNM of misses
+dtlb.replacements                 0 # total number of replacements
+dtlb.writebacks                   0 # total number of writebacks
+dtlb.invalidations                0 # total number of invalidations
+dtlb.miss_rate               0.0000 # miss rate (i.e., misses/ref)
+dtlb.repl_rate               0.0000 # replacement rate (i.e., repls/ref)
+dtlb.wb_rate                 0.0000 # writeback rate (i.e., wrbks/ref)
+dtlb.inv_rate                0.0000 # invalidation rate (i.e., invs/ref)
+sim_invalid_addrs                 0 # total non-speculative bogus addresses seen (debug var)
+ld_text_base           0x0120000000 # program text (code) segment base
+ld_text_size                 253952 # program text (code) size in bytes
+ld_data_base           0x0140000000 # program initialized data segment base
+ld_data_size                  76704 # program init'ed `.data' and uninit'ed `.bss' size in bytes
+ld_stack_base          0x011ff9b000 # program stack segment base (highest address in stack)
+ld_stack_size                 16384 # program initial stack size
+ld_prog_entry          0x012000d040 # program entry point (initial PC)
+ld_environ_base        0x011ff97000 # program environment base address address
+ld_target_big_endian              0 # target executable endian-ness, non-zero if big endian
+mem.page_count                  195 # total number of pages allocated
+mem.page_mem                  1560k # total size of memory pages allocated
+mem.ptab_misses             2627301 # total first level page table misses
+mem.ptab_accesses         523146796 # total page table accesses
+mem.ptab_miss_rate           0.0050 # first level page table miss rate
+
