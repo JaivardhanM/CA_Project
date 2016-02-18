@@ -1,0 +1,133 @@
+gcc -DDEBUG -o sysprobe sysprobe.c
+endian probe results: little
+probe flags: -DBYTES_LITTLE_ENDIAN -DWORDS_LITTLE_ENDIAN -DFAST_SRL -DFAST_SRA -DGZIP_PATH="/bin/gzip"
+probe libs: -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-fast.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c main.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c syscall.c
+syscall.c: In function ‘sys_syscall’:
+syscall.c:1205:6: warning: pointer targets in passing argument 6 of ‘recvfrom’ differ in signedness [-Wpointer-sign]
+      (int) regs->regs_R[MD_REG_A3], a_sock,&addr_len);
+      ^
+In file included from /usr/include/netinet/tcp.h:67:0,
+                 from syscall.c:121:
+/usr/include/i386-linux-gnu/sys/socket.h:174:16: note: expected ‘socklen_t * __restrict__’ but argument is of type ‘int *’
+ extern ssize_t recvfrom (int __fd, void *__restrict __buf, size_t __n,
+                ^
+syscall.c:1967:53: warning: variable ‘size_elem’ set but not used [-Wunused-but-set-variable]
+  qword_t table_id, table_index, buf_addr, num_elem, size_elem;
+                                                     ^
+syscall.c:3122:22: warning: pointer targets in passing argument 3 of ‘getsockname’ differ in signedness [-Wpointer-sign]
+         /* namelen */&addrlen);
+                      ^
+In file included from /usr/include/netinet/tcp.h:67:0,
+                 from syscall.c:121:
+/usr/include/i386-linux-gnu/sys/socket.h:127:12: note: expected ‘socklen_t * __restrict__’ but argument is of type ‘int *’
+ extern int getsockname (int __fd, __SOCKADDR_ARG __addr,
+            ^
+syscall.c:3174:22: warning: pointer targets in passing argument 3 of ‘getpeername’ differ in signedness [-Wpointer-sign]
+         /* namelen */&addrlen);
+                      ^
+In file included from /usr/include/netinet/tcp.h:67:0,
+                 from syscall.c:121:
+/usr/include/i386-linux-gnu/sys/socket.h:141:12: note: expected ‘socklen_t * __restrict__’ but argument is of type ‘int *’
+ extern int getpeername (int __fd, __SOCKADDR_ARG __addr,
+            ^
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c memory.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c regs.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c loader.c
+loader.c: In function ‘ld_load_prog’:
+loader.c:161:17: warning: variable ‘data_break’ set but not used [-Wunused-but-set-variable]
+   md_addr_t sp, data_break = 0, null_ptr = 0, argv_addr, envp_addr;
+                 ^
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c endian.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c dlite.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c symbol.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c eval.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c options.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c stats.c
+stats.c: In function ‘print_dist’:
+stats.c:651:33: warning: variable ‘imin’ set but not used [-Wunused-but-set-variable]
+   unsigned int i, bcount, imax, imin;
+                                 ^
+stats.c:651:27: warning: variable ‘imax’ set but not used [-Wunused-but-set-variable]
+   unsigned int i, bcount, imax, imin;
+                           ^
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c eio.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c range.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c misc.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c machine.c
+cd libexo ; \
+	make "MAKE=make" "CC=gcc" "AR=ar qcv" "AROPT=" "RANLIB=ranlib" "CFLAGS=`./sysprobe -flags` -DDEBUG -O0 -g -Wall" "OEXT=o" "LEXT=a" "EEXT=" "X=/" "RM=rm -f" libexo.a
+make[1]: Entering directory `/home/jai/Desktop/simplescalar/simplesim-Flex/libexo'
+gcc -DBYTES_LITTLE_ENDIAN -DWORDS_LITTLE_ENDIAN -DFAST_SRL -DFAST_SRA -DGZIP_PATH="/bin/gzip"  -DDEBUG -O0 -g -Wall -c libexo.c
+gcc -DBYTES_LITTLE_ENDIAN -DWORDS_LITTLE_ENDIAN -DFAST_SRL -DFAST_SRA -DGZIP_PATH="/bin/gzip"  -DDEBUG -O0 -g -Wall -c exolex.c
+rm -f libexo.a
+ar qcv libexo.a libexo.o exolex.o
+a - libexo.o
+a - exolex.o
+ranlib libexo.a
+make[1]: Leaving directory `/home/jai/Desktop/simplescalar/simplesim-Flex/libexo'
+gcc -o sim-fast `./sysprobe -flags` -DDEBUG -O0 -g -Wall   sim-fast.o main.o syscall.o memory.o regs.o loader.o endian.o dlite.o symbol.o eval.o options.o stats.o eio.o range.o misc.o machine.o libexo/libexo.a `./sysprobe -libs` -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-safe.c
+gcc -o sim-safe `./sysprobe -flags` -DDEBUG -O0 -g -Wall   sim-safe.o main.o syscall.o memory.o regs.o loader.o endian.o dlite.o symbol.o eval.o options.o stats.o eio.o range.o misc.o machine.o libexo/libexo.a `./sysprobe -libs` -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-eio.c
+gcc -o sim-eio `./sysprobe -flags` -DDEBUG -O0 -g -Wall   sim-eio.o main.o syscall.o memory.o regs.o loader.o endian.o dlite.o symbol.o eval.o options.o stats.o eio.o range.o misc.o machine.o libexo/libexo.a `./sysprobe -libs` -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-bpred.c
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c bpred.c
+gcc -o sim-bpred `./sysprobe -flags` -DDEBUG -O0 -g -Wall   sim-bpred.o bpred.o main.o syscall.o memory.o regs.o loader.o endian.o dlite.o symbol.o eval.o options.o stats.o eio.o range.o misc.o machine.o libexo/libexo.a `./sysprobe -libs` -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-profile.c
+sim-profile.c: In function ‘sim_main’:
+sim-profile.c:649:22: warning: variable ‘fault’ set but not used [-Wunused-but-set-variable]
+   enum md_fault_type fault;
+                      ^
+gcc -o sim-profile `./sysprobe -flags` -DDEBUG -O0 -g -Wall   sim-profile.o main.o syscall.o memory.o regs.o loader.o endian.o dlite.o symbol.o eval.o options.o stats.o eio.o range.o misc.o machine.o libexo/libexo.a `./sysprobe -libs` -lm
+gcc `./sysprobe -flags` -DDEBUG -O0 -g -Wall   -c sim-cache.c
+In file included from sim-cache.c:63:0:
+cache.h:106:3: error: expected ‘,’ or ‘}’ before ‘TournamentLRU’
+   TournamentLRU /* -AJS LRU but with the ability to turn off a number of ways */
+   ^
+sim-cache.c: In function ‘sim_check_options’:
+sim-cache.c:355:11: error: too few arguments to function ‘cache_create’
+           dl1_access_fn, /* hit latency */1);
+           ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+sim-cache.c:368:8: error: too few arguments to function ‘cache_create’
+        dl2_access_fn, /* hit latency */1);
+        ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+sim-cache.c:411:11: error: too few arguments to function ‘cache_create’
+           il1_access_fn, /* hit latency */1);
+           ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+sim-cache.c:430:8: error: too few arguments to function ‘cache_create’
+        il2_access_fn, /* hit latency */1);
+        ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+sim-cache.c:445:23: error: too few arguments to function ‘cache_create’
+      /* hit latency */1);
+                       ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+sim-cache.c:459:23: error: too few arguments to function ‘cache_create’
+      /* hit latency */1);
+                       ^
+In file included from sim-cache.c:63:0:
+cache.h:225:1: note: declared here
+ cache_create(char *name,  /* name of the cache */
+ ^
+make: *** [sim-cache.o] Error 1
